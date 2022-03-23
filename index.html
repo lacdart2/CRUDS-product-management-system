@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Poppins:ital,wght@0,200;1,300;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- font awesome cdn link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- css link -->
+  <link rel="stylesheet" href="style.css">
+  <title>crud app</title>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="visible-menu">
+        <div class="nav-container">
+          <div class="first-nav">
+
+            <div class="first-right">
+              <div class="account">
+                <a href="https://github.com/lacdart2"><i class="fab fa-github"></i></a>
+                <span>Github</span>
+              </div>
+              <div class="cart-group">
+                <a href="cart.html"><i class="fas fa-briefcase"></i></a>
+                <span>Portfolio</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="menu">
+      <ul class="menu-nav">
+        <li class="nav-item ">
+          <a href="https://github.com/lacdart2" class="nav-link"><i class="fab fa-github"></i></a>
+          <span>Github</span>
+        </li>
+        <li class="nav-item">
+          <a href="cart.html" class="nav-link"><i class="fas fa-briefcase"></i></a>
+          <span>Portfolio</span>
+        </li>
+        <li class="nav-item">
+          <a href="/" class="nav-link"><i class="fab fa-facebook"></i></a>
+          <span>facebook</span>
+        </li>
+      </ul>
+      <div class="menu-branding">
+
+      </div>
+    </nav>
+
+  </header>
+
+  <!-- header section ends -->
+  <main>
+    <div class="crud">
+
+      <div class="head">
+        <h2>CRUDS</h2>
+        <P>product management system</P>
+      </div>
+
+      <div class="inputs" id="inputs">
+        <input type="text" id="title" placeholder="title">
+        <div class="price">
+          <input onkeyup="getTotal()" type="number" id="price" placeholder="price">
+          <input onkeyup="getTotal()" type="number" id="taxes" placeholder="taxes">
+          <input onkeyup="getTotal()" type="number" id="ads" placeholder="ads">
+          <input onkeyup="getTotal()" type="number" id="discount" placeholder="discount">
+          <small id="total"></small>
+        </div>
+        <input type="number" id="count" placeholder="count">
+        <input type="text" id="category" placeholder="category">
+        <button id="submit">Create</button>
+      </div>
+
+      <div class="outputs">
+        <div class="searchBlock">
+          <input onkeyup="searchData(this.value)" type="text" id="search" placeholder="search">
+          <div class="btnSearch">
+            <button onclick="getSearchMood(this.id)" id="searchTitle">Search By Title</button>
+            <button onclick="getSearchMood(this.id)" id="searchCategory">Search By category</button>
+          </div>
+        </div>
+        <div id="deleteAll">
+        </div>
+        <table>
+          <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>price</th>
+            <th>taxes</th>
+            <th>ads</th>
+            <th>discount</th>
+            <th>Total</th>
+            <th>category</th>
+            <th>update</th>
+            <th>delete</th>
+          </tr>
+          <tbody id="tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <aside class="aside">
+    <h3>made by <span>Lakhdar Hafsi</span> | 2022</h3>
+    <div class="aside-social">
+      <a href="/"><i class="fab fa-facebook"></i></a>
+      <a href="/"><i class="fab fa-instagram"></i></a>
+      <a href="https://twitter.com/LakhdarKader"><i class="fab fa-twitter"></i></a>
+      <a href="https://github.com/lacdart2"><i class="fab fa-github"></i></a>
+    </div>
+  </aside>
+  <script src="script.js"></script>
+</body>
+
+</html>

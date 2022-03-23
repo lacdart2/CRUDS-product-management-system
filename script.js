@@ -1,0 +1,430 @@
+// get total :  ///////////////////////////////////////////
+/////////////////////////////////////////////////////////
+
+let title = document.getElementById("title");
+let price = document.getElementById("price");
+let taxes = document.getElementById("taxes");
+let ads = document.getElementById("ads");
+let discount = document.getElementById("discount");
+let total = document.getElementById("total");
+let count = document.getElementById("count");
+let category = document.getElementById("category");
+let submit = document.getElementById("submit");
+let inputs = document.getElementById("inputs");
+
+let mood = "create";
+let temp;
+
+
+// get total : ///////////////////////////////////////////
+////////////////////////////////////////////////////////
+
+function getTotal() {
+  if (price.value != "") {
+    let result = (+price.value + +taxes.value + +ads.value) - +discount.value;
+    total.innerHTML = result;
+
+    total.style.background = "#040";
+
+
+  } else {
+    total.innerHTML = "";
+    total.style.background = "#aa2c2c";
+
+  }
+}
+
+
+// create  product: ///////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+let dataPro;
+if (localStorage.product != null) {
+  dataPro = JSON.parse(localStorage.product);
+} else {
+  dataPro = [];
+}
+
+
+submit.onclick = function () {
+  let newPro = {
+    title: title.value.toLowerCase(),
+    price: price.value,
+    taxes: taxes.value,
+    ads: ads.value,
+    discount: discount.value,
+    total: total.innerHTML,
+    count: count.value,
+    category: category.value.toLowerCase(),
+  }
+
+
+  //create product-- add products as count number ..more than 1 //////
+  ////////////////////////////////////////////////////////////////
+
+  if (title.value != "" && price.value != "" && category.value != "" && newPro.count < 100) {
+
+    if (mood === "create") {
+      if (newPro.count > 1) {
+        for (let i = 0; i < newPro.count; i++) {
+          dataPro.push(newPro);
+        }
+      } else {
+        dataPro.push(newPro)
+      }
+    } else {
+      dataPro[temp] = newPro;
+      mood = "create";
+      submit.innerHTML = "create";
+      count.style.display = "block";
+    }
+
+    clearData();
+  }
+  /*   else {
+      title.style.background = "red";
+     
+        title.style.outline = "2px solid #aa2c2c";
+          price.style.outline = "2px solid #aa2c2c";
+          category.style.outline = "2px solid #aa2c2c"; 
+  
+  
+  
+  
+  
+  
+    } */
+
+
+
+  // save in local storage : ///////////////////////////////////////////
+  /////////////////////////////////////////// /////////////////////////
+
+  localStorage.setItem("product", JSON.stringify(dataPro));
+
+
+  showData();
+}
+
+
+
+// clear inputs : ///////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+function clearData() {
+  title.value = "";
+  price.value = "";
+  taxes.value = "";
+  ads.value = "";
+  discount.value = "";
+  total.innerHTML = "";
+  count.value = "";
+  category.value = "";
+}
+
+
+
+// read (cRud) ///////////////////////////////////////////
+/////////////////////////////////////////////////////////
+
+function showData() {
+  getTotal();
+  let table = "";
+  for (let i = 0; i < dataPro.length; i++) {
+    table += ` 
+          <tr>
+                <td>${i + 1}</td>
+                <td>${dataPro[i].title}</td>
+                <td>${dataPro[i].price}</td>
+                <td>${dataPro[i].taxes}</td>
+                <td>${dataPro[i].ads}</td>
+                <td>${dataPro[i].discount}</td>
+                <td>${dataPro[i].total}</td>
+                <td>${dataPro[i].category}</td> 
+                <td><button onclick="updateData(${i})" id="update">update</button></td>
+                <td><button onclick="deleteData(${i})" id="delete">delete</button></td>
+          </tr>`
+
+
+  }
+
+  document.getElementById("tbody").innerHTML = table;
+
+  let btnDelete = document.getElementById("deleteAll");
+  if (dataPro.length > 0) {
+    // count :
+    btnDelete.innerHTML = ` <button id="btnDeleteAll" onclick="deleteAll()">Delete All (${dataPro.length})</button>`
+  } else {
+    btnDelete.innerHTML = "";
+  }
+
+}
+showData();
+
+
+
+
+// delete:
+// delete single product  ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+function deleteData(i) {
+  confirm("Are You Sure ?");
+  if (confirm('This Will Delete This Product')) {
+    dataPro.splice(i, 1);
+    localStorage.product = JSON.stringify(dataPro);
+    showData();
+  } else {
+    (alert('Cancelled'))
+    // Do nothing!
+    showData();
+  }
+
+  /*   dataPro.splice(i, 1);
+    localStorage.product = JSON.stringify(dataPro);
+  
+    showData(); */
+}
+// delete all products ///////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+function deleteAll() {
+
+  /*  alert(); */
+  confirm("Are You Sure ?");
+  if (confirm('This Will Delete All Your Data')) {
+    localStorage.clear();
+    dataPro.splice(0);
+    showData();
+  } else {
+    (alert('Cancelled'))
+    // Do nothing!
+    console.log('Thing was not saved to the database.');
+  }
+  showData();
+}
+
+
+
+// update; ///////////////////////////////////////////
+////////////////////////////////////////////////////
+
+function updateData(i) {
+  console.log(i);
+  title.value = dataPro[i].title;
+  price.value = dataPro[i].price;
+  taxes.value = dataPro[i].taxes;
+  ads.value = dataPro[i].ads;
+  discount.value = dataPro[i].discount;
+
+  getTotal();
+
+  count.style.display = "none";
+  category.value = dataPro[i].category;
+  submit.innerHTML = "update";
+  mood = "update";
+  temp = i;
+  scroll({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
+
+// search : ///////////////////////////////////////////
+////////////////////////////////////////////////////
+
+let searchMood = "title";
+
+function getSearchMood(id) {
+
+  let search = document.getElementById("search");
+
+  if (id == "searchTitle") {
+
+    searchMood = "title";
+
+
+
+  } else {
+
+    searchMood = "category";
+
+
+  }
+  search.placeholder = "Search By " + searchMood;
+  search.focus();
+  search.value = "";
+  showData();
+
+  console.log(searchMood);
+}
+
+function searchData(value) {
+
+  let table = "";
+  for (let i = 0; i < dataPro.length; i++) {
+    if (searchMood == "title") {
+
+
+      if (dataPro[i].title.includes(value.toLowerCase())) {
+        table +=
+
+          `<tr>
+          <td>${i}</td>
+          <td>${dataPro[i].title}</td>
+          <td>${dataPro[i].price}</td>
+          <td>${dataPro[i].taxes}</td>
+          <td>${dataPro[i].ads}</td>
+          <td>${dataPro[i].discount}</td>
+          <td>${dataPro[i].total}</td>
+          <td>${dataPro[i].category}</td>
+          <td><button onclick="updateData(${i})" id="update">update</button></td>
+          <td><button onclick="deleteData(${i})" id="delete">delete</button></td>
+     </tr> `
+
+      }
+
+
+
+    } else {
+
+      if (dataPro[i].category.includes(value.toLowerCase())) {
+        table +=
+
+          `<tr>
+          <td>${i}</td>
+          <td>${dataPro[i].title}</td>
+          <td>${dataPro[i].price}</td>
+          <td>${dataPro[i].taxes}</td>
+          <td>${dataPro[i].ads}</td>
+          <td>${dataPro[i].discount}</td>
+          <td>${dataPro[i].total}</td>
+          <td>${dataPro[i].category}</td>
+          <td><button onclick="updateData(${i})" id="update">update</button></td>
+          <td><button onclick="deleteData(${i})" id="delete">delete</button></td>
+     </tr> `
+
+      }
+
+    }
+  }
+  document.getElementById("tbody").innerHTML = table;
+}
+// Select DOM Items
+const menuBtn = document.querySelector('.menu-btn');
+const menu = document.querySelector('.menu');
+const menuNav = document.querySelector('.menu-nav');
+const menuBranding = document.querySelector('.menu-branding');
+const navItems = document.querySelectorAll('.nav-item');
+
+// Set Initial State Of Menu
+let showMenu = false;
+
+menuBtn.addEventListener('click', toggleMenu);
+
+function toggleMenu() {
+  if (!showMenu) {
+    menuBtn.classList.add('close');
+    menu.classList.add('show');
+    menuNav.classList.add('show');
+    menuBranding.classList.add('show');
+    navItems.forEach(item => item.classList.add('show'));
+
+    // Set Menu State
+    showMenu = true;
+  } else {
+    menuBtn.classList.remove('close');
+    menu.classList.remove('show');
+    menuNav.classList.remove('show');
+    menuBranding.classList.remove('show');
+    navItems.forEach(item => item.classList.remove('show'));
+
+    // Set Menu State
+    showMenu = false;
+  }
+}
+
+
+
+
+
+
+
+
+//confirm box :
+/* document.querySelector('#btnDeleteAll').addEventListener('click', () => {
+  Confirm.open({
+    title: 'Background Change',
+    message: 'Arefdfdfdfdf',
+    onok: () => {
+      document.body.style.backgroundColor = 'blue';
+    }
+  })
+});
+const Confirm = {
+  open(options) {
+    options = Object.assign({}, {
+      title: '',
+      message: '',
+      okText: 'OK',
+      cancelText: 'Cancel',
+      onok: function () { },
+      oncancel: function () { }
+    }, options);
+
+    const html = `
+            <div class="confirm">
+                <div class="confirm__window">
+                    <div class="confirm__titlebar">
+                        <span class="confirm__title">${options.title}</span>
+                        <button class="confirm__close">&times;</button>
+                    </div>
+                    <div class="confirm__content">${options.message}</div>
+                    <div class="confirm__buttons">
+                        <button class="confirm__button confirm__button--ok confirm__button--fill">${options.okText}</button>
+                        <button class="confirm__button confirm__button--cancel">${options.cancelText}</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+    const template = document.createElement('template');
+    template.innerHTML = html;
+
+    // Elements
+    const confirmEl = template.content.querySelector('.confirm');
+    const btnClose = template.content.querySelector('.confirm__close');
+    const btnOk = template.content.querySelector('.confirm__button--ok');
+    const btnCancel = template.content.querySelector('.confirm__button--cancel');
+
+    confirmEl.addEventListener('click', e => {
+      if (e.target === confirmEl) {
+        options.oncancel();
+        this._close(confirmEl);
+      }
+    });
+
+    btnOk.addEventListener('click', () => {
+      options.onok();
+      this._close(confirmEl);
+    });
+
+    [btnCancel, btnClose].forEach(el => {
+      el.addEventListener('click', () => {
+        options.oncancel();
+        this._close(confirmEl);
+      });
+    });
+
+    document.body.appendChild(template.content);
+  },
+
+  _close(confirmEl) {
+    confirmEl.classList.add('confirm--close');
+
+    confirmEl.addEventListener('animationend', () => {
+      document.body.removeChild(confirmEl);
+    });
+  }
+};
+ */
